@@ -117,9 +117,6 @@
       <xsl:if test="@type">
         <xsl:value-of select="concat(translate(@type, ' ', '_'), '_')"/>
       </xsl:if>
-      <xsl:if test="@otherType and local-name()='relatedItem'">
-        <xsl:value-of select="concat(translate(@otherType, ' ', '_'), '_')"/>
-      </xsl:if>
     </xsl:variable>
 
     <xsl:call-template name="mods_language_fork">
@@ -131,6 +128,10 @@
     </xsl:call-template>
   </xsl:template>
 
+  <!-- 
+    otherType attribute was added for the relatedItem elements in MODS 3.6,
+    check for usage generate field prefix.
+  -->
   <xsl:template match="mods:relatedItem[@otherType]" mode="slurping_MODS">
     <xsl:param name="prefix"/>
     <xsl:param name="suffix"/>
@@ -138,14 +139,17 @@
     <xsl:param name="datastream">not provided</xsl:param>
     <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz_'" />
     <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ '" />
-
+    
     <xsl:variable name="this_prefix">
       <xsl:value-of select="concat($prefix, local-name(), '_')"/>
+      <xsl:if test="@type">
+        <xsl:value-of select="concat(translate(@type, ' ', '_'), '_')"/>
+      </xsl:if>
       <xsl:if test="@otherType and local-name()='relatedItem'">
         <xsl:value-of select="concat(translate(@otherType, ' ', '_'), '_')"/>
       </xsl:if>
     </xsl:variable>
-
+    
     <xsl:call-template name="mods_language_fork">
       <xsl:with-param name="prefix" select="$this_prefix"/>
       <xsl:with-param name="suffix" select="$suffix"/>
