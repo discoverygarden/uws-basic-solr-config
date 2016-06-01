@@ -117,6 +117,9 @@
       <xsl:if test="@type">
         <xsl:value-of select="concat(translate(@type, ' ', '_'), '_')"/>
       </xsl:if>
+      <xsl:if test="@otherType and local-name()='relatedItem'">
+        <xsl:value-of select="concat(translate(@otherType, ' ', '_'), '_')"/>
+      </xsl:if>
     </xsl:variable>
 
     <xsl:call-template name="mods_language_fork">
