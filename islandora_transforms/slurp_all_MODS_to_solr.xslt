@@ -131,6 +131,30 @@
     </xsl:call-template>
   </xsl:template>
 
+  <xsl:template match="mods:relatedItem[@otherType]" mode="slurping_MODS">
+    <xsl:param name="prefix"/>
+    <xsl:param name="suffix"/>
+    <xsl:param name="pid">not provided</xsl:param>
+    <xsl:param name="datastream">not provided</xsl:param>
+    <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz_'" />
+    <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ '" />
+
+    <xsl:variable name="this_prefix">
+      <xsl:value-of select="concat($prefix, local-name(), '_')"/>
+      <xsl:if test="@otherType and local-name()='relatedItem'">
+        <xsl:value-of select="concat(translate(@otherType, ' ', '_'), '_')"/>
+      </xsl:if>
+    </xsl:variable>
+
+    <xsl:call-template name="mods_language_fork">
+      <xsl:with-param name="prefix" select="$this_prefix"/>
+      <xsl:with-param name="suffix" select="$suffix"/>
+      <xsl:with-param name="value" select="normalize-space(text())"/>
+      <xsl:with-param name="pid" select="$pid"/>
+      <xsl:with-param name="datastream" select="$datastream"/>
+    </xsl:call-template>
+  </xsl:template>
+
   <!--
     The "eventType" attribute was introduce with MODS 3.5... Let's start
     exposing it for use.
