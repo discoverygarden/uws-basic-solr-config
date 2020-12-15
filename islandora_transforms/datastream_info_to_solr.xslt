@@ -6,23 +6,21 @@
   xmlns:xalan="http://xml.apache.org/xalan"
      exclude-result-prefixes="foxml">
 
-      <xsl:variable name="datastream_whitelist">
-        <list>
-          <dsid>DC</dsid>
-          <dsid>RELS-EXT</dsid>
-          <dsid>MODS</dsid>
-          <dsid>TECHMD</dsid>
-          <dsid>PREVIEW</dsid>
-          <dsid>FULL_TEXT</dsid>
-          <dsid>PDFA</dsid>
-          <dsid>MP4</dsid>
-          <dsid>TN</dsid>
-          <dsid>OCR</dsid>
-          <dsid>HOCR</dsid>
-          <dsid>RELS-INT</dsid>
-          <dsid>POLICY</dsid>
-        </list>
-      </xsl:variable>
+  <xsl:variable name="datastream_whitelist">
+    <list>
+      <dsid>DC</dsid>
+      <dsid>RELS-EXT</dsid>
+      <dsid>MODS</dsid>
+      <dsid>TECHMD</dsid>
+      <dsid>PREVIEW</dsid>
+      <dsid>FULL_TEXT</dsid>
+      <dsid>PDFA</dsid>
+      <dsid>MP4</dsid>
+      <dsid>TN</dsid>
+      <dsid>RELS-INT</dsid>
+      <dsid>POLICY</dsid>
+    </list>
+  </xsl:variable>
 
   <xsl:template match="foxml:datastream" mode="index_object_datastreams">
     <field name="fedora_datastreams_ms">
@@ -30,7 +28,6 @@
     </field>
 
     <xsl:if test="./@ID = xalan:nodeset($datastream_whitelist)/list/dsid/text()">
-
       <field name="fedora_datastreams_mimetypes_ms">
         <xsl:value-of select="foxml:datastreamVersion[last()]/@MIMETYPE"/>
       </field>
