@@ -3,24 +3,47 @@
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:foxml="info:fedora/fedora-system:def/foxml#"
+  xmlns:xalan="http://xml.apache.org/xalan"
      exclude-result-prefixes="foxml">
+
+      <xsl:variable name="datastream_whitelist">
+        <list>
+          <dsid>DC</dsid>
+          <dsid>RELS-EXT</dsid>
+          <dsid>MODS</dsid>
+          <dsid>TECHMD</dsid>
+          <dsid>PREVIEW</dsid>
+          <dsid>FULL_TEXT</dsid>
+          <dsid>PDFA</dsid>
+          <dsid>MP4</dsid>
+          <dsid>TN</dsid>
+          <dsid>OCR</dsid>
+          <dsid>HOCR</dsid>
+          <dsid>RELS-INT</dsid>
+          <dsid>POLICY</dsid>
+        </list>
+      </xsl:variable>
 
   <xsl:template match="foxml:datastream" mode="index_object_datastreams">
     <field name="fedora_datastreams_ms">
       <xsl:value-of select="@ID"/>
     </field>
-    <field name="fedora_datastreams_mimetypes_ms">
-      <xsl:value-of select="foxml:datastreamVersion[last()]/@MIMETYPE"/>
-    </field>
-    <xsl:call-template name="fedora_datastream_attribute_fields">
-      <xsl:with-param name="id" select='@ID'/>
-      <xsl:with-param name="prefix">fedora_datastream_info</xsl:with-param>
-    </xsl:call-template>
-    <xsl:apply-templates mode="index_object_datastreams"/>
-    <xsl:call-template name="fedora_datastream_attribute_fields">
-      <xsl:with-param name="element" select="foxml:datastreamVersion[last()]"/>
-      <xsl:with-param name="prefix">fedora_datastream_latest</xsl:with-param>
-    </xsl:call-template>
+
+    <xsl:if test="./@ID = xalan:nodeset($datastream_whitelist)/list/dsid/text()">
+
+      <field name="fedora_datastreams_mimetypes_ms">
+        <xsl:value-of select="foxml:datastreamVersion[last()]/@MIMETYPE"/>
+      </field>
+      <xsl:call-template name="fedora_datastream_attribute_fields">
+        <xsl:with-param name="id" select='@ID'/>
+        <xsl:with-param name="prefix">fedora_datastream_info</xsl:with-param>
+      </xsl:call-template>
+      <xsl:apply-templates mode="index_object_datastreams"/>
+      <xsl:call-template name="fedora_datastream_attribute_fields">
+        <xsl:with-param name="element" select="foxml:datastreamVersion[last()]"/>
+        <xsl:with-param name="prefix">fedora_datastream_latest</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="foxml:datastreamVersion" mode="index_object_datastreams">
